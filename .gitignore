@@ -1,53 +1,32 @@
-# =========================
-# OS / IDE / Editor
-# =========================
+﻿# ط³غŒط³طھظ… ظˆ IDE
+*.log
 .DS_Store
-Thumbs.db
 /.idea
 /.vscode
+/.phpunit.cache
 /.fleet
 /.zed
 
-# =========================
-# Environment / Secret files
-# =========================
+# ظ…ط­غŒط·
 .env
-.env.*.backup
+.env.backup
 .env.production
-.env.local
-auth.json
 Homestead.json
 Homestead.yaml
 
-# =========================
-# Node / Next.js
-# =========================
+# Composer & Node
+/vendor
 /node_modules
-/.next
-/out
+
+# Public & Storage
 /public/build
 /public/hot
-package-lock.json
-yarn.lock
-
-# =========================
-# Laravel / PHP
-# =========================
-/vendor
-/composer.lock
-*.log
-.phpactor.json
-.phpunit.result.cache
-/.phpunit.cache
-
-# Laravel storage (cache, sessions, views)
+/public/storage
 /storage/*.key
 /storage/pail
-/storage/framework/cache/data
-/storage/framework/sessions
-/storage/framework/views
 
-# =========================
-# Misc
-# =========================
-/public/storage
+# ط¯غŒع¯ط±
+.phpactor.json
+.phpunit.result.cache
+/auth.json
+Thumbs.db
