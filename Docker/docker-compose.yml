@@ -1,0 +1,98 @@
+services:
+  php-fpm:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: onlineshop-php-fpm
+    volumes:
+      - ../backend:/var/www/html
+    networks:
+      - app-network
+    restart: always
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: onlineshop
+      DB_USERNAME: shopuser
+      DB_PASSWORD: shoppass
+
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: onlineshop-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ../backend:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php-fpm
+    networks:
+      - app-network
+    restart: always
+
+  mysql:
+    image: mysql:8.0
+    container_name: onlineshop-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: onlineshop
+      MYSQL_USER: shopuser
+      MYSQL_PASSWORD: shoppass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: onlineshop-phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: shopuser
+      PMA_PASSWORD: shoppass
+    ports:
+      - "8081:80"
+    depends_on:
+      - mysql
+    networks:
+      - app-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: onlineshop-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+    restart: always
+    volumes:
+      - redis_data:/data
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: onlineshop-frontend
+    working_dir: /var/www/html/frontend
+    volumes:
+      - ../frontend:/var/www/html/frontend
+    ports:
+      - "3001:3000"
+    depends_on:
+      - php-fpm
+      - mysql
+    networks:
+      - app-network
+    restart: always
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  redis_data:
